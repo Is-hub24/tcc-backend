@@ -12,6 +12,8 @@ public class Carrinho {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id_carrinho;
 
+    private Integer status;
+
     @OneToOne
     @JoinColumn(name = "id_cliente", referencedColumnName = "id")
     private Cliente cliente;
@@ -26,6 +28,14 @@ public class Carrinho {
 
     public void setId_carrinho(Long id_carrinho) {
         this.id_carrinho = id_carrinho;
+    }
+
+    public Integer getStatus() {
+        return status;
+    }
+
+    public void setStatus(Integer status) {
+        this.status = status;
     }
 
     public Cliente getCliente() {

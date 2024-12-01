@@ -2,12 +2,15 @@ package com.back.StartTech.service;
 
 import com.back.StartTech.entity.Carrinho;
 import com.back.StartTech.entity.CarrinhoProdutos;
-import com.back.StartTech.entity.Cliente;
 import com.back.StartTech.entity.Produtos;
 import com.back.StartTech.entity.dtos.CarrinhoDto;
 import com.back.StartTech.repository.CarrinhoRepository;
 import com.back.StartTech.repository.ClienteRepository;
 import com.back.StartTech.repository.ProdutosRepository;
+
+import java.util.List;
+import java.util.Optional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -42,5 +45,13 @@ public class CarrinhoService {
 
         carrinho.getCarrinhoProdutos().add(item);
         return carrinhoRepository.save(carrinho);
+    }
+
+    public List<Carrinho> listarCarrinhos() {
+        return carrinhoRepository.findAll();
+    }
+
+    public Optional<Carrinho> listarCarrinhosByClienteId(Long ClienteId) {
+        return carrinhoRepository.findByCliente_Id(ClienteId);
     }
 }

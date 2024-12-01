@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Upload e Exibir Imagem</title>
+</head>
+<body>
+    <h1>Upload e Exibir Imagem</h1>
+    <input type="file" id="fileInput" />
+    <button id="uploadBtn">Upload</button>
+
+    <h2>Imagem Carregada</h2>
+    <input type="number" id="imageId" placeholder="ID da Imagem" />
+    <button id="fetchBtn">Buscar Imagem</button>
+    <img id="imageDisplay" alt="Imagem carregada" style="max-width: 300px; display: block;" />
+
+    <script>
+        const uploadBtn = document.getElementById('uploadBtn');
+        const fetchBtn = document.getElementById('fetchBtn');
+        const fileInput = document.getElementById('fileInput');
+        const imageIdInput = document.getElementById('imageId');
+        const imageDisplay = document.getElementById('imageDisplay');
+
+        // Função para converter arquivo em Base64
+        const toBase64 = (file) => new Promise((resolve, reject) => {
+            const reader = new FileReader();
+            reader.onload = () => resolve(reader.result.split(',')[1]);
+            reader.onerror = (error) => reject(error);
+            reader.readAsDataURL(file);
+        });
+
+        // Upload da imagem
+        uploadBtn.addEventListener('click', async () => {
+            const file = fileInput.files[0];
+            if (!file) {
+                alert('Por favor, selecione uma imagem.');
+                return;
+            }
+
+            try {
+                const fileData = await toBase64(file);
+                const payload = {
+                    fileName: file.name,
+                    fileType: file.type,
+                    fileData: fileData
+                };
+
+                const response = await fetch('http://localhost:8080/api/images', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+
+                const result = await response.json();
+                if (response.ok) {
+                    alert(`Upload realizado com sucesso! ID: ${result.id}`);
+                } else {
+                    alert(`Erro no upload: ${result.error}`);
+                }
+            } catch (error) {
+                console.error('Erro no upload:', error);
+            }
+        });
+
+        // Buscar e exibir imagem
+        fetchBtn.addEventListener('click', async () => {
+            const imageId = imageIdInput.value;
+            if (!imageId) {
+                alert('Por favor, insira o ID da imagem.');
+                return;
+            }
+
+            try {
+                const response = await fetch(`http://localhost:8080/api/images/${imageId}`);
+                if (!response.ok) {
+                    throw new Error('Imagem não encontrada.');
+                }
+
+                const blob = await response.blob();
+                const imageUrl = URL.createObjectURL(blob);
+                imageDisplay.src = imageUrl;
+            } catch (error) {
+                console.error('Erro ao buscar a imagem:', error);
+                alert('Erro ao buscar a imagem.');
+            }
+        });
+    </script>
+</body>
+</html>

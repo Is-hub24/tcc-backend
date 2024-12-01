@@ -38,11 +38,11 @@ public class ProdutosService {
         if (produtoExistente.isEmpty()) throw new RuntimeException("Produto não criado id: " + id);
 
         Produtos produtoAlterado = produtoExistente.get();
-        produtoAlterado.setnome(produtos.getnome());
+        produtoAlterado.setNome(produtos.getNome());
         produtoAlterado.setDescricao(produtos.getDescricao());
         produtoAlterado.setPreco(produtos.getPreco());
         produtoAlterado.setQuantidade(produtos.getQuantidade());
-        produtoAlterado.setCategoria(produtos.getCategoria());
+        produtoAlterado.setId_categoria(produtos.getId_categoria());
 
         return produtosRepository.save(produtoAlterado);
     }

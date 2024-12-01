@@ -15,7 +15,7 @@ public class ProdutosController {
     @Autowired
     ProdutosService produtosService;
 
-    // CRUutos
+    // CRUD
 
      @GetMapping
      public List<Produtos> getProdutos() {

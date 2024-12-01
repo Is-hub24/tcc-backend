@@ -14,20 +14,24 @@ public class Produtos {
     private double preco;
     private String id_categoria;
 
-    public String getnome() {
-        return nome;
-    }
-
-    public void setnome(String nome) {
-        this.nome = nome;
-    }
+    @OneToOne
+    @JoinColumn(name = "image_id", nullable = true)
+    private Image image;
 
     public long getId_produtos() {
         return id_produtos;
     }
 
-    public void setId_produtos(long id) {
-        this.id_produtos = id;
+    public void setId_produtos(long id_produtos) {
+        this.id_produtos = id_produtos;
+    }
+
+    public String getNome() {
+        return nome;
+    }
+
+    public void setNome(String nome) {
+        this.nome = nome;
     }
 
     public String getDescricao() {
@@ -42,23 +46,33 @@ public class Produtos {
         return quantidade;
     }
 
-    public void setQuantidade(int quantidadeProdutos) {
-        this.quantidade = quantidadeProdutos;
+    public void setQuantidade(int quantidade) {
+        this.quantidade = quantidade;
     }
 
     public double getPreco() {
         return preco;
     }
 
-    public void setPreco(double precoProduto) {
-        this.preco = precoProduto;
+    public void setPreco(double preco) {
+        this.preco = preco;
     }
 
-    public String getCategoria() {
+    public String getId_categoria() {
         return id_categoria;
     }
 
-    public void setCategoria(String categoria) {
-        this.id_categoria = categoria;
+    public void setId_categoria(String id_categoria) {
+        this.id_categoria = id_categoria;
     }
+
+    public Image getImage() {
+        return image;
+    }
+
+    public void setImage(Image image) {
+        this.image = image;
+    }
+
+    
 }

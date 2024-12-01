@@ -1,6 +1,5 @@
 package com.back.StartTech.controller;
 
-import com.back.StartTech.entity.Carrinho;
 import com.back.StartTech.entity.Cliente;
 import com.back.StartTech.service.ClienteService;
 import org.springframework.beans.factory.annotation.Autowired;
