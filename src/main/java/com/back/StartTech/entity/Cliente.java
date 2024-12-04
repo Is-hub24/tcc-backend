@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.web.servlet.handler.UserRoleAuthorizationInterceptor;
 
 import java.util.Collection;
 import java.util.List;
@@ -21,6 +22,13 @@ public class Cliente  implements UserDetails {
     private String senha;
     private String cpf;
     private ClienteRole role;
+
+    public Cliente(String login, String senha, ClienteRole role){
+        this.email = login;
+        this.senha = senha;
+        this.role =  role;
+
+    }
 
 
     public long getId() {
