@@ -4,14 +4,13 @@ import jakarta.persistence.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.web.servlet.handler.UserRoleAuthorizationInterceptor;
 
 import java.util.Collection;
 import java.util.List;
 
 @Table(name = "cliente")
 @Entity(name = "cliente")
-public class Cliente  implements UserDetails {
+public class Cliente implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
@@ -23,17 +22,26 @@ public class Cliente  implements UserDetails {
     private String cpf;
     private ClienteRole role;
 
+    public Cliente(long id, String nome, String email, String endereco, String telefone, String senha, String cpf, ClienteRole role) {
+        this.id = id;
+        this.nome = nome;
+        this.email = email;
+        this.endereco = endereco;
+        this.telefone = telefone;
+        this.senha = senha;
+        this.cpf = cpf;
+        this.role = role;
+    }
+
     public Cliente(String login, String senha, ClienteRole role){
         this.email = login;
         this.senha = senha;
-        this.role =  role;
-
+        this.role = role;
     }
 
+    public Cliente() {}
 
-    public long getId() {
-        return id;
-    }
+    public long getId() {return id;}
 
     public void setId(long id) {
         this.id = id;
@@ -99,12 +107,12 @@ public class Cliente  implements UserDetails {
 
     @Override
     public String getPassword() {
-        return getPassword();
+        return senha;
     }
 
     @Override
     public String getUsername() {
-        return getEmail();
+        return email;
     }
 
     @Override

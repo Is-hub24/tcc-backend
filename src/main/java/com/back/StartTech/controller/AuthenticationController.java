@@ -2,8 +2,11 @@ package com.back.StartTech.controller;
 
 import com.back.StartTech.entity.Cliente;
 import com.back.StartTech.entity.dtos.AuthenticationDTO;
+import com.back.StartTech.entity.dtos.LoginResponseDTO;
 import com.back.StartTech.entity.dtos.RegisterDTO;
+import com.back.StartTech.infra.security.TokenService;
 import com.back.StartTech.repository.ClienteRepository;
+import jakarta.validation.Valid;
 import org.apache.catalina.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.security.SecurityProperties;
@@ -28,24 +31,33 @@ public class AuthenticationController {
     @Autowired
     private ClienteRepository repository;
 
+    @Autowired
+    private TokenService tokenService;
+
     @PostMapping("/login")
-    public ResponseEntity login(@RequestBody @Validated AuthenticationDTO data){
-       var usernamepassword = new UsernamePasswordAuthenticationToken(data.login(),data.password());
-       var auth = this.authenticationManager.authenticate(usernamepassword);
+    public ResponseEntity<?> login(@RequestBody @Valid AuthenticationDTO data){
+        try {
+            var usernamepassword = new UsernamePasswordAuthenticationToken(data.login(), data.password());
+            var auth = this.authenticationManager.authenticate(usernamepassword);
 
-       return ResponseEntity.ok().build();
+            var token = tokenService.generateToken((Cliente) auth.getPrincipal());
+
+            return ResponseEntity.ok(new LoginResponseDTO(token));
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.badRequest().body("Erro encontrado");
+        }
     }
-    @PostMapping("/register")
-    public ResponseEntity register (@RequestBody @Validated RegisterDTO data){
-    if (this.repository.findByEmail(data.login()) != null) return ResponseEntity.badRequest().build();
 
-        String encryptdPassword = new BCryptPasswordEncoder().encode((data.password()));
-        Cliente novoCliente = new Cliente(data.login(), encryptdPassword, data.role());
+    @PostMapping("/register")
+    public ResponseEntity<?> register(@RequestBody @Valid RegisterDTO data){
+        if (this.repository.findByEmail(data.login()) != null) return ResponseEntity.badRequest().build();
+
+        String encryptedPassword = new BCryptPasswordEncoder().encode((data.password()));
+        Cliente novoCliente = new Cliente(data.login(), encryptedPassword, data.role());
 
         this.repository.save(novoCliente);
 
         return ResponseEntity.ok().build();
-
-
     }
 }
